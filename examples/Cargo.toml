@@ -1,0 +1,15 @@
+[package]
+name = "relay-client-examples"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "basic_usage"
+path = "basic_usage.rs"
+
+[dependencies]
+relay-client-rs = { path = "..", package = "relay-client-rs" }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tokio-stream = "0.1"
+tonic = { version = "0.12", features = ["transport"] }
