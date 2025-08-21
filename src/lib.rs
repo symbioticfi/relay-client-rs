@@ -6,7 +6,7 @@
 //! # Usage
 //!
 //! ```rust,no_run
-//! use relay_client::generated::api::proto::v1::symbiotic_api_service_client::SymbioticApiServiceClient;
+//! use symbiotic_relay_client::generated::api::proto::v1::symbiotic_api_service_client::SymbioticApiServiceClient;
 //! use tonic::transport::Endpoint;
 //!
 //! #[tokio::main]
