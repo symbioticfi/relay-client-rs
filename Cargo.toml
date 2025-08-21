@@ -1,11 +1,21 @@
 [package]
-name = "relay-client-rs"
-version = "0.1.0"
+name = "symbiotic-relay-client"
+version = "0.2.0"
 edition = "2024"
+authors = ["Symbiotic Team <hello@symbiotic.fi>"]
 description = "Rust gRPC client for Symbiotic Relay"
-license = "Apache-2.0"
+license = "BUSL-1.1"
 repository = "https://github.com/symbioticfi/relay-client-rs"
+homepage = "https://github.com/symbioticfi/relay-client-rs"
+documentation = "https://docs.rs/symbiotic-relay-client"
 readme = "README.md"
+keywords = ["grpc", "symbiotic", "relay", "client", "blockchain"]
+categories = [
+  "api-bindings",
+  "network-programming",
+  "cryptography::cryptocurrencies",
+]
+exclude = ["examples/"]
 
 [lib]
 path = "src/lib.rs"

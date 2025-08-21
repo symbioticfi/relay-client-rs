@@ -1,6 +1,6 @@
 # Symbiotic Relay Client Examples
 
-This directory contains examples demonstrating how to use the `relay-client-rs` library to interact with Symbiotic Relay servers.
+This directory contains examples demonstrating how to use the `symbiotic-relay-client` library to interact with Symbiotic Relay servers.
 
 ## Basic Usage Example
 

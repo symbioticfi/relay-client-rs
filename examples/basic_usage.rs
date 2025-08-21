@@ -7,12 +7,12 @@
 //! 4. Retrieve aggregation proofs
 //! 5. Get validator set information
 
-use relay_client_rs::generated::api::proto::v1::{
-    ErrorCode, GetAggregationProofRequest, GetCurrentEpochRequest, GetSignaturesRequest,
+use std::env;
+use symbiotic_relay_client::generated::api::proto::v1::{
+    GetAggregationProofRequest, GetCurrentEpochRequest, GetSignaturesRequest,
     GetSuggestedEpochRequest, GetValidatorSetRequest, SignMessageRequest, SignMessageWaitRequest,
     SigningStatus, symbiotic_api_service_client::SymbioticApiServiceClient,
 };
-use std::env;
 use tokio_stream::StreamExt;
 use tonic::transport::Channel;
 
@@ -37,7 +37,7 @@ impl RelayClient {
     pub async fn get_current_epoch(
         &mut self,
     ) -> Result<
-        tonic::Response<relay_client_rs::generated::api::proto::v1::GetCurrentEpochResponse>,
+        tonic::Response<symbiotic_relay_client::generated::api::proto::v1::GetCurrentEpochResponse>,
         tonic::Status,
     > {
         let request = tonic::Request::new(GetCurrentEpochRequest {});
@@ -48,7 +48,9 @@ impl RelayClient {
     pub async fn get_suggested_epoch(
         &mut self,
     ) -> Result<
-        tonic::Response<relay_client_rs::generated::api::proto::v1::GetSuggestedEpochResponse>,
+        tonic::Response<
+            symbiotic_relay_client::generated::api::proto::v1::GetSuggestedEpochResponse,
+        >,
         tonic::Status,
     > {
         let request = tonic::Request::new(GetSuggestedEpochRequest {});
@@ -62,7 +64,7 @@ impl RelayClient {
         message: Vec<u8>,
         required_epoch: Option<u64>,
     ) -> Result<
-        tonic::Response<relay_client_rs::generated::api::proto::v1::SignMessageResponse>,
+        tonic::Response<symbiotic_relay_client::generated::api::proto::v1::SignMessageResponse>,
         tonic::Status,
     > {
         let request = tonic::Request::new(SignMessageRequest {
@@ -78,7 +80,9 @@ impl RelayClient {
         &mut self,
         request_hash: String,
     ) -> Result<
-        tonic::Response<relay_client_rs::generated::api::proto::v1::GetAggregationProofResponse>,
+        tonic::Response<
+            symbiotic_relay_client::generated::api::proto::v1::GetAggregationProofResponse,
+        >,
         tonic::Status,
     > {
         let request = tonic::Request::new(GetAggregationProofRequest { request_hash });
@@ -90,7 +94,7 @@ impl RelayClient {
         &mut self,
         request_hash: String,
     ) -> Result<
-        tonic::Response<relay_client_rs::generated::api::proto::v1::GetSignaturesResponse>,
+        tonic::Response<symbiotic_relay_client::generated::api::proto::v1::GetSignaturesResponse>,
         tonic::Status,
     > {
         let request = tonic::Request::new(GetSignaturesRequest { request_hash });
@@ -102,7 +106,7 @@ impl RelayClient {
         &mut self,
         epoch: Option<u64>,
     ) -> Result<
-        tonic::Response<relay_client_rs::generated::api::proto::v1::GetValidatorSetResponse>,
+        tonic::Response<symbiotic_relay_client::generated::api::proto::v1::GetValidatorSetResponse>,
         tonic::Status,
     > {
         let request = tonic::Request::new(GetValidatorSetRequest { epoch });
@@ -116,7 +120,9 @@ impl RelayClient {
         message: Vec<u8>,
         required_epoch: Option<u64>,
     ) -> Result<
-        tonic::Streaming<relay_client_rs::generated::api::proto::v1::SignMessageWaitResponse>,
+        tonic::Streaming<
+            symbiotic_relay_client::generated::api::proto::v1::SignMessageWaitResponse,
+        >,
         tonic::Status,
     > {
         let request = tonic::Request::new(SignMessageWaitRequest {

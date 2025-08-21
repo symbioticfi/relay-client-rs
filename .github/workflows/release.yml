@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  # Trigger for stable releases
+  push:
+    tags:
+      - 'v*.*.*'
+  
+  # Manual trigger for stable releases
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
+      - name: Build project
+        run: cargo build --release
+
+      - name: Run tests
+        run: cargo test
+
+      - name: Determine version
+        id: version_info
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == refs/tags/* ]]; then
+            # Extract version from tag (remove 'v' prefix)
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Release version from tag: $VERSION"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "Release version from manual input: $VERSION"
+          else
+            echo "Error: Unknown trigger event"
+            exit 1
+          fi
+
+      - name: Update Cargo.toml version
+        run: |
+          VERSION="${{ steps.version_info.outputs.version }}"
+          
+          # Update Cargo.toml
+          sed -i "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
+          echo "Updated Cargo.toml to version: $VERSION"
+
+      - name: Verify package can be built
+        run: |
+          cargo check
+          cargo publish --dry-run --allow-dirty
+
+      - name: Publish to crates.io
+        run: |
+          cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }} --allow-dirty
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
