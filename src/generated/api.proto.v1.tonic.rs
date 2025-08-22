@@ -318,6 +318,66 @@ pub mod symbiotic_api_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        pub async fn get_validator_by_address(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetValidatorByAddressRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetValidatorByAddressResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetValidatorByAddress",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetValidatorByAddress",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_validator_set_header(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetValidatorSetHeaderRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetValidatorSetHeaderResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetValidatorSetHeader",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetValidatorSetHeader",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn sign_message_wait(
             &mut self,
             request: impl tonic::IntoRequest<super::SignMessageWaitRequest>,
