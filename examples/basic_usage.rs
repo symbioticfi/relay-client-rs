@@ -140,7 +140,7 @@ impl RelayClient {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize client
     let server_url =
-        env::var("RELAY_SERVER_URL").unwrap_or_else(|_| "http://localhost:8080".to_string());
+        env::var("RELAY_SERVER_URL").unwrap_or_else(|_| "localhost:8080".to_string());
     let mut client = RelayClient::new(&server_url).await?;
 
     // Example 1: Get current epoch

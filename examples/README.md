@@ -20,10 +20,10 @@ cd examples
 cargo run --bin basic_usage
 ```
 
-By default, the example will try to connect to `http://localhost:8080`. You can specify a different server URL by setting the `RELAY_SERVER_URL` environment variable:
+By default, the example will try to connect to `localhost:8080`. You can specify a different server URL by setting the `RELAY_SERVER_URL` environment variable:
 
 ```bash
-RELAY_SERVER_URL=http://my-relay-server:8080 cargo run --bin basic_usage
+RELAY_SERVER_URL=my-relay-server:8080 cargo run --bin basic_usage
 ```
 
 NOTE: for the signature/proof generation to work you need to run the script for all active relay servers to get the majority consensus to generate proof.
@@ -48,7 +48,7 @@ use tonic::transport::Endpoint;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create transport channel
-    let endpoint = Endpoint::from_shared("http://localhost:8080")?;
+    let endpoint = Endpoint::from_shared("localhost:8080")?;
     let channel = endpoint.connect().await?;
     
     // Create the gRPC client
@@ -73,7 +73,7 @@ You can configure the transport connection with various options:
 use tonic::transport::Endpoint;
 use std::time::Duration;
 
-let endpoint = Endpoint::from_shared("http://localhost:8080")?
+let endpoint = Endpoint::from_shared("localhost:8080")?
     .timeout(Duration::from_secs(30))
     .connect_timeout(Duration::from_secs(10))
     .tcp_keepalive(Some(Duration::from_secs(60)));
