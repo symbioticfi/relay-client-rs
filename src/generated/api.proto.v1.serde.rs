@@ -1703,9 +1703,6 @@ impl serde::Serialize for GetValidatorSetHeaderResponse {
         if !self.validators_ssz_mroot.is_empty() {
             len += 1;
         }
-        if !self.previous_header_hash.is_empty() {
-            len += 1;
-        }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetValidatorSetHeaderResponse", len)?;
         if self.version != 0 {
             struct_ser.serialize_field("version", &self.version)?;
@@ -1727,9 +1724,6 @@ impl serde::Serialize for GetValidatorSetHeaderResponse {
         if !self.validators_ssz_mroot.is_empty() {
             struct_ser.serialize_field("validatorsSszMroot", &self.validators_ssz_mroot)?;
         }
-        if !self.previous_header_hash.is_empty() {
-            struct_ser.serialize_field("previousHeaderHash", &self.previous_header_hash)?;
-        }
         struct_ser.end()
     }
 }
@@ -1750,8 +1744,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
             "quorumThreshold",
             "validators_ssz_mroot",
             "validatorsSszMroot",
-            "previous_header_hash",
-            "previousHeaderHash",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -1762,7 +1754,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
             CaptureTimestamp,
             QuorumThreshold,
             ValidatorsSszMroot,
-            PreviousHeaderHash,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1790,7 +1781,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                             "captureTimestamp" | "capture_timestamp" => Ok(GeneratedField::CaptureTimestamp),
                             "quorumThreshold" | "quorum_threshold" => Ok(GeneratedField::QuorumThreshold),
                             "validatorsSszMroot" | "validators_ssz_mroot" => Ok(GeneratedField::ValidatorsSszMroot),
-                            "previousHeaderHash" | "previous_header_hash" => Ok(GeneratedField::PreviousHeaderHash),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1816,7 +1806,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                 let mut capture_timestamp__ = None;
                 let mut quorum_threshold__ = None;
                 let mut validators_ssz_mroot__ = None;
-                let mut previous_header_hash__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Version => {
@@ -1861,12 +1850,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                             }
                             validators_ssz_mroot__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::PreviousHeaderHash => {
-                            if previous_header_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("previousHeaderHash"));
-                            }
-                            previous_header_hash__ = Some(map_.next_value()?);
-                        }
                     }
                 }
                 Ok(GetValidatorSetHeaderResponse {
@@ -1876,7 +1859,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                     capture_timestamp: capture_timestamp__,
                     quorum_threshold: quorum_threshold__.unwrap_or_default(),
                     validators_ssz_mroot: validators_ssz_mroot__.unwrap_or_default(),
-                    previous_header_hash: previous_header_hash__.unwrap_or_default(),
                 })
             }
         }
@@ -2001,9 +1983,6 @@ impl serde::Serialize for GetValidatorSetResponse {
         if !self.quorum_threshold.is_empty() {
             len += 1;
         }
-        if !self.previous_header_hash.is_empty() {
-            len += 1;
-        }
         if self.status != 0 {
             len += 1;
         }
@@ -2027,9 +2006,6 @@ impl serde::Serialize for GetValidatorSetResponse {
         }
         if !self.quorum_threshold.is_empty() {
             struct_ser.serialize_field("quorumThreshold", &self.quorum_threshold)?;
-        }
-        if !self.previous_header_hash.is_empty() {
-            struct_ser.serialize_field("previousHeaderHash", &self.previous_header_hash)?;
         }
         if self.status != 0 {
             let v = ValidatorSetStatus::try_from(self.status)
@@ -2057,8 +2033,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
             "captureTimestamp",
             "quorum_threshold",
             "quorumThreshold",
-            "previous_header_hash",
-            "previousHeaderHash",
             "status",
             "validators",
         ];
@@ -2070,7 +2044,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
             Epoch,
             CaptureTimestamp,
             QuorumThreshold,
-            PreviousHeaderHash,
             Status,
             Validators,
         }
@@ -2099,7 +2072,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
                             "epoch" => Ok(GeneratedField::Epoch),
                             "captureTimestamp" | "capture_timestamp" => Ok(GeneratedField::CaptureTimestamp),
                             "quorumThreshold" | "quorum_threshold" => Ok(GeneratedField::QuorumThreshold),
-                            "previousHeaderHash" | "previous_header_hash" => Ok(GeneratedField::PreviousHeaderHash),
                             "status" => Ok(GeneratedField::Status),
                             "validators" => Ok(GeneratedField::Validators),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -2126,7 +2098,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
                 let mut epoch__ = None;
                 let mut capture_timestamp__ = None;
                 let mut quorum_threshold__ = None;
-                let mut previous_header_hash__ = None;
                 let mut status__ = None;
                 let mut validators__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -2167,12 +2138,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
                             }
                             quorum_threshold__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::PreviousHeaderHash => {
-                            if previous_header_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("previousHeaderHash"));
-                            }
-                            previous_header_hash__ = Some(map_.next_value()?);
-                        }
                         GeneratedField::Status => {
                             if status__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("status"));
@@ -2193,7 +2158,6 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
                     epoch: epoch__.unwrap_or_default(),
                     capture_timestamp: capture_timestamp__,
                     quorum_threshold: quorum_threshold__.unwrap_or_default(),
-                    previous_header_hash: previous_header_hash__.unwrap_or_default(),
                     status: status__.unwrap_or_default(),
                     validators: validators__.unwrap_or_default(),
                 })
@@ -3241,8 +3205,8 @@ impl serde::Serialize for ValidatorSetStatus {
     {
         let variant = match self {
             Self::Unspecified => "VALIDATOR_SET_STATUS_UNSPECIFIED",
-            Self::Pending => "VALIDATOR_SET_STATUS_PENDING",
-            Self::Missed => "VALIDATOR_SET_STATUS_MISSED",
+            Self::Derived => "VALIDATOR_SET_STATUS_DERIVED",
+            Self::Aggregated => "VALIDATOR_SET_STATUS_AGGREGATED",
             Self::Committed => "VALIDATOR_SET_STATUS_COMMITTED",
         };
         serializer.serialize_str(variant)
@@ -3256,8 +3220,8 @@ impl<'de> serde::Deserialize<'de> for ValidatorSetStatus {
     {
         const FIELDS: &[&str] = &[
             "VALIDATOR_SET_STATUS_UNSPECIFIED",
-            "VALIDATOR_SET_STATUS_PENDING",
-            "VALIDATOR_SET_STATUS_MISSED",
+            "VALIDATOR_SET_STATUS_DERIVED",
+            "VALIDATOR_SET_STATUS_AGGREGATED",
             "VALIDATOR_SET_STATUS_COMMITTED",
         ];
 
@@ -3300,8 +3264,8 @@ impl<'de> serde::Deserialize<'de> for ValidatorSetStatus {
             {
                 match value {
                     "VALIDATOR_SET_STATUS_UNSPECIFIED" => Ok(ValidatorSetStatus::Unspecified),
-                    "VALIDATOR_SET_STATUS_PENDING" => Ok(ValidatorSetStatus::Pending),
-                    "VALIDATOR_SET_STATUS_MISSED" => Ok(ValidatorSetStatus::Missed),
+                    "VALIDATOR_SET_STATUS_DERIVED" => Ok(ValidatorSetStatus::Derived),
+                    "VALIDATOR_SET_STATUS_AGGREGATED" => Ok(ValidatorSetStatus::Aggregated),
                     "VALIDATOR_SET_STATUS_COMMITTED" => Ok(ValidatorSetStatus::Committed),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
