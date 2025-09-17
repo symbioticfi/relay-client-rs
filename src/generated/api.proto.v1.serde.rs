@@ -1700,6 +1700,9 @@ impl serde::Serialize for GetValidatorSetHeaderResponse {
         if !self.quorum_threshold.is_empty() {
             len += 1;
         }
+        if !self.total_voting_power.is_empty() {
+            len += 1;
+        }
         if !self.validators_ssz_mroot.is_empty() {
             len += 1;
         }
@@ -1720,6 +1723,9 @@ impl serde::Serialize for GetValidatorSetHeaderResponse {
         }
         if !self.quorum_threshold.is_empty() {
             struct_ser.serialize_field("quorumThreshold", &self.quorum_threshold)?;
+        }
+        if !self.total_voting_power.is_empty() {
+            struct_ser.serialize_field("totalVotingPower", &self.total_voting_power)?;
         }
         if !self.validators_ssz_mroot.is_empty() {
             struct_ser.serialize_field("validatorsSszMroot", &self.validators_ssz_mroot)?;
@@ -1742,6 +1748,8 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
             "captureTimestamp",
             "quorum_threshold",
             "quorumThreshold",
+            "total_voting_power",
+            "totalVotingPower",
             "validators_ssz_mroot",
             "validatorsSszMroot",
         ];
@@ -1753,6 +1761,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
             Epoch,
             CaptureTimestamp,
             QuorumThreshold,
+            TotalVotingPower,
             ValidatorsSszMroot,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -1780,6 +1789,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                             "epoch" => Ok(GeneratedField::Epoch),
                             "captureTimestamp" | "capture_timestamp" => Ok(GeneratedField::CaptureTimestamp),
                             "quorumThreshold" | "quorum_threshold" => Ok(GeneratedField::QuorumThreshold),
+                            "totalVotingPower" | "total_voting_power" => Ok(GeneratedField::TotalVotingPower),
                             "validatorsSszMroot" | "validators_ssz_mroot" => Ok(GeneratedField::ValidatorsSszMroot),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -1805,6 +1815,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                 let mut epoch__ = None;
                 let mut capture_timestamp__ = None;
                 let mut quorum_threshold__ = None;
+                let mut total_voting_power__ = None;
                 let mut validators_ssz_mroot__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
@@ -1844,6 +1855,12 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                             }
                             quorum_threshold__ = Some(map_.next_value()?);
                         }
+                        GeneratedField::TotalVotingPower => {
+                            if total_voting_power__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("totalVotingPower"));
+                            }
+                            total_voting_power__ = Some(map_.next_value()?);
+                        }
                         GeneratedField::ValidatorsSszMroot => {
                             if validators_ssz_mroot__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("validatorsSszMroot"));
@@ -1858,6 +1875,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
                     epoch: epoch__.unwrap_or_default(),
                     capture_timestamp: capture_timestamp__,
                     quorum_threshold: quorum_threshold__.unwrap_or_default(),
+                    total_voting_power: total_voting_power__.unwrap_or_default(),
                     validators_ssz_mroot: validators_ssz_mroot__.unwrap_or_default(),
                 })
             }
