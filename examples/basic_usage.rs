@@ -9,8 +9,8 @@
 
 use std::env;
 use symbiotic_relay_client::generated::api::proto::v1::{
-    GetAggregationProofRequest, GetCurrentEpochRequest, GetSignaturesRequest,
-    GetSuggestedEpochRequest, GetValidatorSetRequest, SignMessageRequest, SignMessageWaitRequest,
+    GetAggregationProofRequest, GetCurrentEpochRequest, GetLastAllCommittedRequest,
+    GetSignaturesRequest, GetValidatorSetRequest, SignMessageRequest, SignMessageWaitRequest,
     SigningStatus, symbiotic_api_service_client::SymbioticApiServiceClient,
 };
 use tokio_stream::StreamExt;
@@ -44,17 +44,17 @@ impl RelayClient {
         self.client.get_current_epoch(request).await
     }
 
-    /// Get the suggested epoch for signing.
-    pub async fn get_suggested_epoch(
+    /// Get the last all committed epochs for all chains.
+    pub async fn get_last_all_committed(
         &mut self,
     ) -> Result<
         tonic::Response<
-            symbiotic_relay_client::generated::api::proto::v1::GetSuggestedEpochResponse,
+            symbiotic_relay_client::generated::api::proto::v1::GetLastAllCommittedResponse,
         >,
         tonic::Status,
     > {
-        let request = tonic::Request::new(GetSuggestedEpochRequest {});
-        self.client.get_suggested_epoch(request).await
+        let request = tonic::Request::new(GetLastAllCommittedRequest {});
+        self.client.get_last_all_committed(request).await
     }
 
     /// Sign a message using the specified key tag.
@@ -139,8 +139,7 @@ impl RelayClient {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize client
-    let server_url =
-        env::var("RELAY_SERVER_URL").unwrap_or_else(|_| "localhost:8080".to_string());
+    let server_url = env::var("RELAY_SERVER_URL").unwrap_or_else(|_| "localhost:8080".to_string());
     let mut client = RelayClient::new(&server_url).await?;
 
     // Example 1: Get current epoch
@@ -153,10 +152,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Example 2: Get suggested epoch
-    println!("\n=== Getting Suggested Epoch ===");
-    let suggested_epoch = client.get_suggested_epoch().await?;
-    let suggested_data = suggested_epoch.into_inner();
-    println!("Suggested epoch: {}", suggested_data.epoch);
+    println!("\n=== Calculate Last Committed Epoch ===");
+    let mut suggested_epoch = 0u64;
+    let epoch_infos_response = client.get_last_all_committed().await?;
+    let epoch_infos_data = epoch_infos_response.into_inner();
+
+    for (_, info) in epoch_infos_data.epoch_infos.iter() {
+        if suggested_epoch == 0 || info.last_committed_epoch < suggested_epoch {
+            suggested_epoch = info.last_committed_epoch;
+        }
+    }
+    println!("Last committed epoch: {}", suggested_epoch);
 
     // Example 3: Get validator set
     println!("\n=== Getting Validator Set ===");
@@ -166,6 +172,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("Epoch: {}", validator_data.epoch);
     println!("Status: {:?}", validator_data.status());
     println!("Number of validators: {}", validator_data.validators.len());
+    println!("Quorum threshold: {}", validator_data.quorum_threshold);
 
     // Display some validator details
     if let Some(first_validator) = validator_data.validators.first() {
@@ -199,6 +206,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if let Some(proof) = proof_data.aggregation_proof {
                 println!("Verification type: {}", proof.verification_type);
                 println!("Proof length: {} bytes", proof.proof.len());
+                println!("Message hash length: {} bytes", proof.message_hash.len());
             }
         }
         Err(e) => {
@@ -249,6 +257,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     SigningStatus::try_from(response.status).unwrap_or(SigningStatus::Unspecified);
                 println!("Status: {:?}", status);
                 println!("Request hash: {}", response.request_hash);
+                println!("Epoch: {}", response.epoch);
 
                 match status {
                     SigningStatus::Pending => {
@@ -270,8 +279,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!("Signing timed out");
                         break;
                     }
-                    _ => {
-                        println!("Unknown status: {:?}", status);
+                    SigningStatus::Unspecified => {
+                        println!("Unknown Signing status : unspecified");
                     }
                 }
 
