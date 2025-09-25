@@ -136,6 +136,120 @@ impl<'de> serde::Deserialize<'de> for AggregationProof {
         deserializer.deserialize_struct("api.proto.v1.AggregationProof", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ChainEpochInfo {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.last_committed_epoch != 0 {
+            len += 1;
+        }
+        if self.start_time.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ChainEpochInfo", len)?;
+        if self.last_committed_epoch != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("lastCommittedEpoch", ToString::to_string(&self.last_committed_epoch).as_str())?;
+        }
+        if let Some(v) = self.start_time.as_ref() {
+            struct_ser.serialize_field("startTime", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ChainEpochInfo {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "last_committed_epoch",
+            "lastCommittedEpoch",
+            "start_time",
+            "startTime",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            LastCommittedEpoch,
+            StartTime,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "lastCommittedEpoch" | "last_committed_epoch" => Ok(GeneratedField::LastCommittedEpoch),
+                            "startTime" | "start_time" => Ok(GeneratedField::StartTime),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ChainEpochInfo;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ChainEpochInfo")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChainEpochInfo, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut last_committed_epoch__ = None;
+                let mut start_time__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::LastCommittedEpoch => {
+                            if last_committed_epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("lastCommittedEpoch"));
+                            }
+                            last_committed_epoch__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::StartTime => {
+                            if start_time__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("startTime"));
+                            }
+                            start_time__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ChainEpochInfo {
+                    last_committed_epoch: last_committed_epoch__.unwrap_or_default(),
+                    start_time: start_time__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ChainEpochInfo", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for ErrorCode {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -211,6 +325,122 @@ impl<'de> serde::Deserialize<'de> for ErrorCode {
             }
         }
         deserializer.deserialize_any(GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ExtraData {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.key.is_empty() {
+            len += 1;
+        }
+        if !self.value.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ExtraData", len)?;
+        if !self.key.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("key", pbjson::private::base64::encode(&self.key).as_str())?;
+        }
+        if !self.value.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("value", pbjson::private::base64::encode(&self.value).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ExtraData {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "key",
+            "value",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Key,
+            Value,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "key" => Ok(GeneratedField::Key),
+                            "value" => Ok(GeneratedField::Value),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ExtraData;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ExtraData")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ExtraData, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut key__ = None;
+                let mut value__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Key => {
+                            if key__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("key"));
+                            }
+                            key__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Value => {
+                            if value__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("value"));
+                            }
+                            value__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ExtraData {
+                    key: key__.unwrap_or_default(),
+                    value: value__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ExtraData", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetAggregationProofRequest {
@@ -783,6 +1013,382 @@ impl<'de> serde::Deserialize<'de> for GetCurrentEpochResponse {
         deserializer.deserialize_struct("api.proto.v1.GetCurrentEpochResponse", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for GetLastAllCommittedRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let len = 0;
+        let struct_ser = serializer.serialize_struct("api.proto.v1.GetLastAllCommittedRequest", len)?;
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetLastAllCommittedRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                            Err(serde::de::Error::unknown_field(value, FIELDS))
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetLastAllCommittedRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.GetLastAllCommittedRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetLastAllCommittedRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                while map_.next_key::<GeneratedField>()?.is_some() {
+                    let _ = map_.next_value::<serde::de::IgnoredAny>()?;
+                }
+                Ok(GetLastAllCommittedRequest {
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.GetLastAllCommittedRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetLastAllCommittedResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.epoch_infos.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetLastAllCommittedResponse", len)?;
+        if !self.epoch_infos.is_empty() {
+            struct_ser.serialize_field("epochInfos", &self.epoch_infos)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetLastAllCommittedResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "epoch_infos",
+            "epochInfos",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            EpochInfos,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "epochInfos" | "epoch_infos" => Ok(GeneratedField::EpochInfos),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetLastAllCommittedResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.GetLastAllCommittedResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetLastAllCommittedResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut epoch_infos__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::EpochInfos => {
+                            if epoch_infos__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("epochInfos"));
+                            }
+                            epoch_infos__ = Some(
+                                map_.next_value::<std::collections::HashMap<::pbjson::private::NumberDeserialize<u64>, _>>()?
+                                    .into_iter().map(|(k,v)| (k.0, v)).collect()
+                            );
+                        }
+                    }
+                }
+                Ok(GetLastAllCommittedResponse {
+                    epoch_infos: epoch_infos__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.GetLastAllCommittedResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetLastCommittedRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.settlement_chain_id != 0 {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetLastCommittedRequest", len)?;
+        if self.settlement_chain_id != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("settlementChainId", ToString::to_string(&self.settlement_chain_id).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetLastCommittedRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "settlement_chain_id",
+            "settlementChainId",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            SettlementChainId,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "settlementChainId" | "settlement_chain_id" => Ok(GeneratedField::SettlementChainId),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetLastCommittedRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.GetLastCommittedRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetLastCommittedRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut settlement_chain_id__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::SettlementChainId => {
+                            if settlement_chain_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("settlementChainId"));
+                            }
+                            settlement_chain_id__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(GetLastCommittedRequest {
+                    settlement_chain_id: settlement_chain_id__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.GetLastCommittedRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetLastCommittedResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.settlement_chain_id != 0 {
+            len += 1;
+        }
+        if self.epoch_info.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetLastCommittedResponse", len)?;
+        if self.settlement_chain_id != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("settlementChainId", ToString::to_string(&self.settlement_chain_id).as_str())?;
+        }
+        if let Some(v) = self.epoch_info.as_ref() {
+            struct_ser.serialize_field("epochInfo", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetLastCommittedResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "settlement_chain_id",
+            "settlementChainId",
+            "epoch_info",
+            "epochInfo",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            SettlementChainId,
+            EpochInfo,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "settlementChainId" | "settlement_chain_id" => Ok(GeneratedField::SettlementChainId),
+                            "epochInfo" | "epoch_info" => Ok(GeneratedField::EpochInfo),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetLastCommittedResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.GetLastCommittedResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetLastCommittedResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut settlement_chain_id__ = None;
+                let mut epoch_info__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::SettlementChainId => {
+                            if settlement_chain_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("settlementChainId"));
+                            }
+                            settlement_chain_id__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::EpochInfo => {
+                            if epoch_info__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("epochInfo"));
+                            }
+                            epoch_info__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(GetLastCommittedResponse {
+                    settlement_chain_id: settlement_chain_id__.unwrap_or_default(),
+                    epoch_info: epoch_info__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.GetLastCommittedResponse", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for GetSignatureRequestRequest {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -1193,190 +1799,6 @@ impl<'de> serde::Deserialize<'de> for GetSignaturesResponse {
             }
         }
         deserializer.deserialize_struct("api.proto.v1.GetSignaturesResponse", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetSuggestedEpochRequest {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let len = 0;
-        let struct_ser = serializer.serialize_struct("api.proto.v1.GetSuggestedEpochRequest", len)?;
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetSuggestedEpochRequest {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                            Err(serde::de::Error::unknown_field(value, FIELDS))
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetSuggestedEpochRequest;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct api.proto.v1.GetSuggestedEpochRequest")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetSuggestedEpochRequest, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                while map_.next_key::<GeneratedField>()?.is_some() {
-                    let _ = map_.next_value::<serde::de::IgnoredAny>()?;
-                }
-                Ok(GetSuggestedEpochRequest {
-                })
-            }
-        }
-        deserializer.deserialize_struct("api.proto.v1.GetSuggestedEpochRequest", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for GetSuggestedEpochResponse {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.epoch != 0 {
-            len += 1;
-        }
-        if self.start_time.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetSuggestedEpochResponse", len)?;
-        if self.epoch != 0 {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("epoch", ToString::to_string(&self.epoch).as_str())?;
-        }
-        if let Some(v) = self.start_time.as_ref() {
-            struct_ser.serialize_field("startTime", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for GetSuggestedEpochResponse {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "epoch",
-            "start_time",
-            "startTime",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Epoch,
-            StartTime,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "epoch" => Ok(GeneratedField::Epoch),
-                            "startTime" | "start_time" => Ok(GeneratedField::StartTime),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = GetSuggestedEpochResponse;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct api.proto.v1.GetSuggestedEpochResponse")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetSuggestedEpochResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut epoch__ = None;
-                let mut start_time__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Epoch => {
-                            if epoch__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("epoch"));
-                            }
-                            epoch__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::StartTime => {
-                            if start_time__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("startTime"));
-                            }
-                            start_time__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(GetSuggestedEpochResponse {
-                    epoch: epoch__.unwrap_or_default(),
-                    start_time: start_time__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("api.proto.v1.GetSuggestedEpochResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetValidatorByAddressRequest {
@@ -1881,6 +2303,233 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetHeaderResponse {
             }
         }
         deserializer.deserialize_struct("api.proto.v1.GetValidatorSetHeaderResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetValidatorSetMetadataRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.epoch.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetValidatorSetMetadataRequest", len)?;
+        if let Some(v) = self.epoch.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("epoch", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetValidatorSetMetadataRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "epoch",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Epoch,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "epoch" => Ok(GeneratedField::Epoch),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetValidatorSetMetadataRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.GetValidatorSetMetadataRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetValidatorSetMetadataRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut epoch__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Epoch => {
+                            if epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("epoch"));
+                            }
+                            epoch__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(GetValidatorSetMetadataRequest {
+                    epoch: epoch__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.GetValidatorSetMetadataRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for GetValidatorSetMetadataResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.extra_data.is_empty() {
+            len += 1;
+        }
+        if !self.commitment_data.is_empty() {
+            len += 1;
+        }
+        if !self.request_hash.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetValidatorSetMetadataResponse", len)?;
+        if !self.extra_data.is_empty() {
+            struct_ser.serialize_field("extraData", &self.extra_data)?;
+        }
+        if !self.commitment_data.is_empty() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("commitmentData", pbjson::private::base64::encode(&self.commitment_data).as_str())?;
+        }
+        if !self.request_hash.is_empty() {
+            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for GetValidatorSetMetadataResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "extra_data",
+            "extraData",
+            "commitment_data",
+            "commitmentData",
+            "request_hash",
+            "requestHash",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ExtraData,
+            CommitmentData,
+            RequestHash,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "extraData" | "extra_data" => Ok(GeneratedField::ExtraData),
+                            "commitmentData" | "commitment_data" => Ok(GeneratedField::CommitmentData),
+                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = GetValidatorSetMetadataResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.GetValidatorSetMetadataResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<GetValidatorSetMetadataResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut extra_data__ = None;
+                let mut commitment_data__ = None;
+                let mut request_hash__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ExtraData => {
+                            if extra_data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("extraData"));
+                            }
+                            extra_data__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::CommitmentData => {
+                            if commitment_data__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("commitmentData"));
+                            }
+                            commitment_data__ = 
+                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::RequestHash => {
+                            if request_hash__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                            }
+                            request_hash__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(GetValidatorSetMetadataResponse {
+                    extra_data: extra_data__.unwrap_or_default(),
+                    commitment_data: commitment_data__.unwrap_or_default(),
+                    request_hash: request_hash__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.GetValidatorSetMetadataResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetValidatorSetRequest {

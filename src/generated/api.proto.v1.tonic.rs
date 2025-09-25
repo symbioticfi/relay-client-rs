@@ -171,36 +171,6 @@ pub mod symbiotic_api_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        pub async fn get_suggested_epoch(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetSuggestedEpochRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::GetSuggestedEpochResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/api.proto.v1.SymbioticAPIService/GetSuggestedEpoch",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "api.proto.v1.SymbioticAPIService",
-                        "GetSuggestedEpoch",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
         pub async fn get_signatures(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSignaturesRequest>,
@@ -407,6 +377,96 @@ pub mod symbiotic_api_service_client {
                     ),
                 );
             self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn get_last_committed(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetLastCommittedRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetLastCommittedResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetLastCommitted",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetLastCommitted",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_last_all_committed(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetLastAllCommittedRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetLastAllCommittedResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetLastAllCommitted",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetLastAllCommitted",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_validator_set_metadata(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetValidatorSetMetadataRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetValidatorSetMetadataResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetValidatorSetMetadata",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetValidatorSetMetadata",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
