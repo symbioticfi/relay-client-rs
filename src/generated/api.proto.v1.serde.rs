@@ -7,9 +7,6 @@ impl serde::Serialize for AggregationProof {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.verification_type != 0 {
-            len += 1;
-        }
         if !self.message_hash.is_empty() {
             len += 1;
         }
@@ -17,9 +14,6 @@ impl serde::Serialize for AggregationProof {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.AggregationProof", len)?;
-        if self.verification_type != 0 {
-            struct_ser.serialize_field("verificationType", &self.verification_type)?;
-        }
         if !self.message_hash.is_empty() {
             #[allow(clippy::needless_borrow)]
             #[allow(clippy::needless_borrows_for_generic_args)]
@@ -40,8 +34,6 @@ impl<'de> serde::Deserialize<'de> for AggregationProof {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "verification_type",
-            "verificationType",
             "message_hash",
             "messageHash",
             "proof",
@@ -49,7 +41,6 @@ impl<'de> serde::Deserialize<'de> for AggregationProof {
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            VerificationType,
             MessageHash,
             Proof,
         }
@@ -73,7 +64,6 @@ impl<'de> serde::Deserialize<'de> for AggregationProof {
                         E: serde::de::Error,
                     {
                         match value {
-                            "verificationType" | "verification_type" => Ok(GeneratedField::VerificationType),
                             "messageHash" | "message_hash" => Ok(GeneratedField::MessageHash),
                             "proof" => Ok(GeneratedField::Proof),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -95,19 +85,10 @@ impl<'de> serde::Deserialize<'de> for AggregationProof {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut verification_type__ = None;
                 let mut message_hash__ = None;
                 let mut proof__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::VerificationType => {
-                            if verification_type__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("verificationType"));
-                            }
-                            verification_type__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
                         GeneratedField::MessageHash => {
                             if message_hash__.is_some() {
                                 return Err(serde::de::Error::duplicate_field("messageHash"));
@@ -127,7 +108,6 @@ impl<'de> serde::Deserialize<'de> for AggregationProof {
                     }
                 }
                 Ok(AggregationProof {
-                    verification_type: verification_type__.unwrap_or_default(),
                     message_hash: message_hash__.unwrap_or_default(),
                     proof: proof__.unwrap_or_default(),
                 })
@@ -451,12 +431,12 @@ impl serde::Serialize for GetAggregationProofRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetAggregationProofRequest", len)?;
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         struct_ser.end()
     }
@@ -468,13 +448,13 @@ impl<'de> serde::Deserialize<'de> for GetAggregationProofRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            RequestHash,
+            RequestId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -496,7 +476,7 @@ impl<'de> serde::Deserialize<'de> for GetAggregationProofRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -516,19 +496,19 @@ impl<'de> serde::Deserialize<'de> for GetAggregationProofRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetAggregationProofRequest {
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                 })
             }
         }
@@ -635,12 +615,12 @@ impl serde::Serialize for GetAggregationStatusRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetAggregationStatusRequest", len)?;
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         struct_ser.end()
     }
@@ -652,13 +632,13 @@ impl<'de> serde::Deserialize<'de> for GetAggregationStatusRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            RequestHash,
+            RequestId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -680,7 +660,7 @@ impl<'de> serde::Deserialize<'de> for GetAggregationStatusRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -700,19 +680,19 @@ impl<'de> serde::Deserialize<'de> for GetAggregationStatusRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetAggregationStatusRequest {
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                 })
             }
         }
@@ -1397,12 +1377,12 @@ impl serde::Serialize for GetSignatureRequestRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetSignatureRequestRequest", len)?;
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         struct_ser.end()
     }
@@ -1414,13 +1394,13 @@ impl<'de> serde::Deserialize<'de> for GetSignatureRequestRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            RequestHash,
+            RequestId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1442,7 +1422,7 @@ impl<'de> serde::Deserialize<'de> for GetSignatureRequestRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1462,19 +1442,19 @@ impl<'de> serde::Deserialize<'de> for GetSignatureRequestRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetSignatureRequestRequest {
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                 })
             }
         }
@@ -1626,12 +1606,12 @@ impl serde::Serialize for GetSignaturesRequest {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetSignaturesRequest", len)?;
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         struct_ser.end()
     }
@@ -1643,13 +1623,13 @@ impl<'de> serde::Deserialize<'de> for GetSignaturesRequest {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            RequestHash,
+            RequestId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1671,7 +1651,7 @@ impl<'de> serde::Deserialize<'de> for GetSignaturesRequest {
                         E: serde::de::Error,
                     {
                         match value {
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1691,19 +1671,19 @@ impl<'de> serde::Deserialize<'de> for GetSignaturesRequest {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetSignaturesRequest {
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                 })
             }
         }
@@ -2414,7 +2394,7 @@ impl serde::Serialize for GetValidatorSetMetadataResponse {
         if !self.commitment_data.is_empty() {
             len += 1;
         }
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetValidatorSetMetadataResponse", len)?;
@@ -2426,8 +2406,8 @@ impl serde::Serialize for GetValidatorSetMetadataResponse {
             #[allow(clippy::needless_borrows_for_generic_args)]
             struct_ser.serialize_field("commitmentData", pbjson::private::base64::encode(&self.commitment_data).as_str())?;
         }
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         struct_ser.end()
     }
@@ -2443,15 +2423,15 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetMetadataResponse {
             "extraData",
             "commitment_data",
             "commitmentData",
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             ExtraData,
             CommitmentData,
-            RequestHash,
+            RequestId,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2475,7 +2455,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetMetadataResponse {
                         match value {
                             "extraData" | "extra_data" => Ok(GeneratedField::ExtraData),
                             "commitmentData" | "commitment_data" => Ok(GeneratedField::CommitmentData),
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2497,7 +2477,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetMetadataResponse {
             {
                 let mut extra_data__ = None;
                 let mut commitment_data__ = None;
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::ExtraData => {
@@ -2514,18 +2494,18 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetMetadataResponse {
                                 Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
                             ;
                         }
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                     }
                 }
                 Ok(GetValidatorSetMetadataResponse {
                     extra_data: extra_data__.unwrap_or_default(),
                     commitment_data: commitment_data__.unwrap_or_default(),
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                 })
             }
         }
@@ -3092,15 +3072,15 @@ impl serde::Serialize for SignMessageResponse {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         if self.epoch != 0 {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.SignMessageResponse", len)?;
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         if self.epoch != 0 {
             #[allow(clippy::needless_borrow)]
@@ -3117,14 +3097,14 @@ impl<'de> serde::Deserialize<'de> for SignMessageResponse {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
             "epoch",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            RequestHash,
+            RequestId,
             Epoch,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3147,7 +3127,7 @@ impl<'de> serde::Deserialize<'de> for SignMessageResponse {
                         E: serde::de::Error,
                     {
                         match value {
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             "epoch" => Ok(GeneratedField::Epoch),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3168,15 +3148,15 @@ impl<'de> serde::Deserialize<'de> for SignMessageResponse {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 let mut epoch__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Epoch => {
                             if epoch__.is_some() {
@@ -3189,7 +3169,7 @@ impl<'de> serde::Deserialize<'de> for SignMessageResponse {
                     }
                 }
                 Ok(SignMessageResponse {
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                     epoch: epoch__.unwrap_or_default(),
                 })
             }
@@ -3345,7 +3325,7 @@ impl serde::Serialize for SignMessageWaitResponse {
         if self.status != 0 {
             len += 1;
         }
-        if !self.request_hash.is_empty() {
+        if !self.request_id.is_empty() {
             len += 1;
         }
         if self.epoch != 0 {
@@ -3360,8 +3340,8 @@ impl serde::Serialize for SignMessageWaitResponse {
                 .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.status)))?;
             struct_ser.serialize_field("status", &v)?;
         }
-        if !self.request_hash.is_empty() {
-            struct_ser.serialize_field("requestHash", &self.request_hash)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
         }
         if self.epoch != 0 {
             #[allow(clippy::needless_borrow)]
@@ -3382,8 +3362,8 @@ impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
     {
         const FIELDS: &[&str] = &[
             "status",
-            "request_hash",
-            "requestHash",
+            "request_id",
+            "requestId",
             "epoch",
             "aggregation_proof",
             "aggregationProof",
@@ -3392,7 +3372,7 @@ impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Status,
-            RequestHash,
+            RequestId,
             Epoch,
             AggregationProof,
         }
@@ -3417,7 +3397,7 @@ impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
                     {
                         match value {
                             "status" => Ok(GeneratedField::Status),
-                            "requestHash" | "request_hash" => Ok(GeneratedField::RequestHash),
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
                             "epoch" => Ok(GeneratedField::Epoch),
                             "aggregationProof" | "aggregation_proof" => Ok(GeneratedField::AggregationProof),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
@@ -3440,7 +3420,7 @@ impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut status__ = None;
-                let mut request_hash__ = None;
+                let mut request_id__ = None;
                 let mut epoch__ = None;
                 let mut aggregation_proof__ = None;
                 while let Some(k) = map_.next_key()? {
@@ -3451,11 +3431,11 @@ impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
                             }
                             status__ = Some(map_.next_value::<SigningStatus>()? as i32);
                         }
-                        GeneratedField::RequestHash => {
-                            if request_hash__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestHash"));
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
                             }
-                            request_hash__ = Some(map_.next_value()?);
+                            request_id__ = Some(map_.next_value()?);
                         }
                         GeneratedField::Epoch => {
                             if epoch__.is_some() {
@@ -3475,7 +3455,7 @@ impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
                 }
                 Ok(SignMessageWaitResponse {
                     status: status__.unwrap_or_default(),
-                    request_hash: request_hash__.unwrap_or_default(),
+                    request_id: request_id__.unwrap_or_default(),
                     epoch: epoch__.unwrap_or_default(),
                     aggregation_proof: aggregation_proof__,
                 })
