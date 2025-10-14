@@ -3855,6 +3855,7 @@ impl serde::Serialize for ValidatorSetStatus {
             Self::Derived => "VALIDATOR_SET_STATUS_DERIVED",
             Self::Aggregated => "VALIDATOR_SET_STATUS_AGGREGATED",
             Self::Committed => "VALIDATOR_SET_STATUS_COMMITTED",
+            Self::Missed => "VALIDATOR_SET_STATUS_MISSED",
         };
         serializer.serialize_str(variant)
     }
@@ -3870,6 +3871,7 @@ impl<'de> serde::Deserialize<'de> for ValidatorSetStatus {
             "VALIDATOR_SET_STATUS_DERIVED",
             "VALIDATOR_SET_STATUS_AGGREGATED",
             "VALIDATOR_SET_STATUS_COMMITTED",
+            "VALIDATOR_SET_STATUS_MISSED",
         ];
 
         struct GeneratedVisitor;
@@ -3914,6 +3916,7 @@ impl<'de> serde::Deserialize<'de> for ValidatorSetStatus {
                     "VALIDATOR_SET_STATUS_DERIVED" => Ok(ValidatorSetStatus::Derived),
                     "VALIDATOR_SET_STATUS_AGGREGATED" => Ok(ValidatorSetStatus::Aggregated),
                     "VALIDATOR_SET_STATUS_COMMITTED" => Ok(ValidatorSetStatus::Committed),
+                    "VALIDATOR_SET_STATUS_MISSED" => Ok(ValidatorSetStatus::Missed),
                     _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
                 }
             }
