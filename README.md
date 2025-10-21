@@ -8,7 +8,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-symbiotic-relay-client = "0.2.0"
+symbiotic-relay-client = "0.3.0"
 ```
 
 ## Using Development/Nightly Versions
@@ -22,7 +22,7 @@ symbiotic-relay-client = { git = "https://github.com/symbioticfi/relay-client-rs
 
 Replace `9f35b8e` with the specific commit hash you want to use. You can also use:
 - `branch = "main"` for the latest main branch
-- `tag = "v0.2.0"` for a specific release tag
+- `tag = "v0.3.0"` for a specific release tag
 
 # Usage
 
