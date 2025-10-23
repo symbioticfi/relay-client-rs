@@ -348,36 +348,6 @@ pub mod symbiotic_api_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
-        pub async fn sign_message_wait(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SignMessageWaitRequest>,
-        ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::SignMessageWaitResponse>>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/api.proto.v1.SymbioticAPIService/SignMessageWait",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "api.proto.v1.SymbioticAPIService",
-                        "SignMessageWait",
-                    ),
-                );
-            self.inner.server_streaming(req, path, codec).await
-        }
         pub async fn get_last_committed(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLastCommittedRequest>,
@@ -467,6 +437,93 @@ pub mod symbiotic_api_service_client {
                     ),
                 );
             self.inner.unary(req, path, codec).await
+        }
+        pub async fn listen_signatures(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListenSignaturesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::ListenSignaturesResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/ListenSignatures",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "ListenSignatures",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn listen_proofs(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListenProofsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::ListenProofsResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/ListenProofs",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("api.proto.v1.SymbioticAPIService", "ListenProofs"),
+                );
+            self.inner.server_streaming(req, path, codec).await
+        }
+        pub async fn listen_validator_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListenValidatorSetRequest>,
+        ) -> std::result::Result<
+            tonic::Response<tonic::codec::Streaming<super::ListenValidatorSetResponse>>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/ListenValidatorSet",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "ListenValidatorSet",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }

@@ -2615,52 +2615,12 @@ impl serde::Serialize for GetValidatorSetResponse {
     {
         use serde::ser::SerializeStruct;
         let mut len = 0;
-        if self.version != 0 {
-            len += 1;
-        }
-        if self.required_key_tag != 0 {
-            len += 1;
-        }
-        if self.epoch != 0 {
-            len += 1;
-        }
-        if self.capture_timestamp.is_some() {
-            len += 1;
-        }
-        if !self.quorum_threshold.is_empty() {
-            len += 1;
-        }
-        if self.status != 0 {
-            len += 1;
-        }
-        if !self.validators.is_empty() {
+        if self.validator_set.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetValidatorSetResponse", len)?;
-        if self.version != 0 {
-            struct_ser.serialize_field("version", &self.version)?;
-        }
-        if self.required_key_tag != 0 {
-            struct_ser.serialize_field("requiredKeyTag", &self.required_key_tag)?;
-        }
-        if self.epoch != 0 {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("epoch", ToString::to_string(&self.epoch).as_str())?;
-        }
-        if let Some(v) = self.capture_timestamp.as_ref() {
-            struct_ser.serialize_field("captureTimestamp", v)?;
-        }
-        if !self.quorum_threshold.is_empty() {
-            struct_ser.serialize_field("quorumThreshold", &self.quorum_threshold)?;
-        }
-        if self.status != 0 {
-            let v = ValidatorSetStatus::try_from(self.status)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.status)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if !self.validators.is_empty() {
-            struct_ser.serialize_field("validators", &self.validators)?;
+        if let Some(v) = self.validator_set.as_ref() {
+            struct_ser.serialize_field("validatorSet", v)?;
         }
         struct_ser.end()
     }
@@ -2672,27 +2632,13 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
         D: serde::Deserializer<'de>,
     {
         const FIELDS: &[&str] = &[
-            "version",
-            "required_key_tag",
-            "requiredKeyTag",
-            "epoch",
-            "capture_timestamp",
-            "captureTimestamp",
-            "quorum_threshold",
-            "quorumThreshold",
-            "status",
-            "validators",
+            "validator_set",
+            "validatorSet",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
-            Version,
-            RequiredKeyTag,
-            Epoch,
-            CaptureTimestamp,
-            QuorumThreshold,
-            Status,
-            Validators,
+            ValidatorSet,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -2714,13 +2660,7 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
                         E: serde::de::Error,
                     {
                         match value {
-                            "version" => Ok(GeneratedField::Version),
-                            "requiredKeyTag" | "required_key_tag" => Ok(GeneratedField::RequiredKeyTag),
-                            "epoch" => Ok(GeneratedField::Epoch),
-                            "captureTimestamp" | "capture_timestamp" => Ok(GeneratedField::CaptureTimestamp),
-                            "quorumThreshold" | "quorum_threshold" => Ok(GeneratedField::QuorumThreshold),
-                            "status" => Ok(GeneratedField::Status),
-                            "validators" => Ok(GeneratedField::Validators),
+                            "validatorSet" | "validator_set" => Ok(GeneratedField::ValidatorSet),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -2740,73 +2680,19 @@ impl<'de> serde::Deserialize<'de> for GetValidatorSetResponse {
                 where
                     V: serde::de::MapAccess<'de>,
             {
-                let mut version__ = None;
-                let mut required_key_tag__ = None;
-                let mut epoch__ = None;
-                let mut capture_timestamp__ = None;
-                let mut quorum_threshold__ = None;
-                let mut status__ = None;
-                let mut validators__ = None;
+                let mut validator_set__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
-                        GeneratedField::Version => {
-                            if version__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("version"));
+                        GeneratedField::ValidatorSet => {
+                            if validator_set__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validatorSet"));
                             }
-                            version__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::RequiredKeyTag => {
-                            if required_key_tag__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requiredKeyTag"));
-                            }
-                            required_key_tag__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::Epoch => {
-                            if epoch__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("epoch"));
-                            }
-                            epoch__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::CaptureTimestamp => {
-                            if capture_timestamp__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("captureTimestamp"));
-                            }
-                            capture_timestamp__ = map_.next_value()?;
-                        }
-                        GeneratedField::QuorumThreshold => {
-                            if quorum_threshold__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("quorumThreshold"));
-                            }
-                            quorum_threshold__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = Some(map_.next_value::<ValidatorSetStatus>()? as i32);
-                        }
-                        GeneratedField::Validators => {
-                            if validators__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("validators"));
-                            }
-                            validators__ = Some(map_.next_value()?);
+                            validator_set__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(GetValidatorSetResponse {
-                    version: version__.unwrap_or_default(),
-                    required_key_tag: required_key_tag__.unwrap_or_default(),
-                    epoch: epoch__.unwrap_or_default(),
-                    capture_timestamp: capture_timestamp__,
-                    quorum_threshold: quorum_threshold__.unwrap_or_default(),
-                    status: status__.unwrap_or_default(),
-                    validators: validators__.unwrap_or_default(),
+                    validator_set: validator_set__,
                 })
             }
         }
@@ -2925,6 +2811,647 @@ impl<'de> serde::Deserialize<'de> for Key {
             }
         }
         deserializer.deserialize_struct("api.proto.v1.Key", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListenProofsRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.start_epoch.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ListenProofsRequest", len)?;
+        if let Some(v) = self.start_epoch.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("startEpoch", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListenProofsRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "start_epoch",
+            "startEpoch",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StartEpoch,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "startEpoch" | "start_epoch" => Ok(GeneratedField::StartEpoch),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListenProofsRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ListenProofsRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListenProofsRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut start_epoch__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::StartEpoch => {
+                            if start_epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("startEpoch"));
+                            }
+                            start_epoch__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ListenProofsRequest {
+                    start_epoch: start_epoch__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ListenProofsRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListenProofsResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.request_id.is_empty() {
+            len += 1;
+        }
+        if self.epoch != 0 {
+            len += 1;
+        }
+        if self.aggregation_proof.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ListenProofsResponse", len)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
+        }
+        if self.epoch != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("epoch", ToString::to_string(&self.epoch).as_str())?;
+        }
+        if let Some(v) = self.aggregation_proof.as_ref() {
+            struct_ser.serialize_field("aggregationProof", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListenProofsResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "epoch",
+            "aggregation_proof",
+            "aggregationProof",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            Epoch,
+            AggregationProof,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "epoch" => Ok(GeneratedField::Epoch),
+                            "aggregationProof" | "aggregation_proof" => Ok(GeneratedField::AggregationProof),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListenProofsResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ListenProofsResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListenProofsResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut epoch__ = None;
+                let mut aggregation_proof__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Epoch => {
+                            if epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("epoch"));
+                            }
+                            epoch__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::AggregationProof => {
+                            if aggregation_proof__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("aggregationProof"));
+                            }
+                            aggregation_proof__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListenProofsResponse {
+                    request_id: request_id__.unwrap_or_default(),
+                    epoch: epoch__.unwrap_or_default(),
+                    aggregation_proof: aggregation_proof__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ListenProofsResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListenSignaturesRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.start_epoch.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ListenSignaturesRequest", len)?;
+        if let Some(v) = self.start_epoch.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("startEpoch", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListenSignaturesRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "start_epoch",
+            "startEpoch",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StartEpoch,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "startEpoch" | "start_epoch" => Ok(GeneratedField::StartEpoch),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListenSignaturesRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ListenSignaturesRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListenSignaturesRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut start_epoch__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::StartEpoch => {
+                            if start_epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("startEpoch"));
+                            }
+                            start_epoch__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ListenSignaturesRequest {
+                    start_epoch: start_epoch__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ListenSignaturesRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListenSignaturesResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.request_id.is_empty() {
+            len += 1;
+        }
+        if self.epoch != 0 {
+            len += 1;
+        }
+        if self.signature.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ListenSignaturesResponse", len)?;
+        if !self.request_id.is_empty() {
+            struct_ser.serialize_field("requestId", &self.request_id)?;
+        }
+        if self.epoch != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("epoch", ToString::to_string(&self.epoch).as_str())?;
+        }
+        if let Some(v) = self.signature.as_ref() {
+            struct_ser.serialize_field("signature", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListenSignaturesResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "request_id",
+            "requestId",
+            "epoch",
+            "signature",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            RequestId,
+            Epoch,
+            Signature,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
+                            "epoch" => Ok(GeneratedField::Epoch),
+                            "signature" => Ok(GeneratedField::Signature),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListenSignaturesResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ListenSignaturesResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListenSignaturesResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut request_id__ = None;
+                let mut epoch__ = None;
+                let mut signature__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::RequestId => {
+                            if request_id__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requestId"));
+                            }
+                            request_id__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Epoch => {
+                            if epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("epoch"));
+                            }
+                            epoch__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Signature => {
+                            if signature__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("signature"));
+                            }
+                            signature__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListenSignaturesResponse {
+                    request_id: request_id__.unwrap_or_default(),
+                    epoch: epoch__.unwrap_or_default(),
+                    signature: signature__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ListenSignaturesResponse", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListenValidatorSetRequest {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.start_epoch.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ListenValidatorSetRequest", len)?;
+        if let Some(v) = self.start_epoch.as_ref() {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("startEpoch", ToString::to_string(&v).as_str())?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListenValidatorSetRequest {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "start_epoch",
+            "startEpoch",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            StartEpoch,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "startEpoch" | "start_epoch" => Ok(GeneratedField::StartEpoch),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListenValidatorSetRequest;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ListenValidatorSetRequest")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListenValidatorSetRequest, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut start_epoch__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::StartEpoch => {
+                            if start_epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("startEpoch"));
+                            }
+                            start_epoch__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(ListenValidatorSetRequest {
+                    start_epoch: start_epoch__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ListenValidatorSetRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ListenValidatorSetResponse {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.validator_set.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ListenValidatorSetResponse", len)?;
+        if let Some(v) = self.validator_set.as_ref() {
+            struct_ser.serialize_field("validatorSet", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ListenValidatorSetResponse {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "validator_set",
+            "validatorSet",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            ValidatorSet,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "validatorSet" | "validator_set" => Ok(GeneratedField::ValidatorSet),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ListenValidatorSetResponse;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ListenValidatorSetResponse")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ListenValidatorSetResponse, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut validator_set__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::ValidatorSet => {
+                            if validator_set__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validatorSet"));
+                            }
+                            validator_set__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ListenValidatorSetResponse {
+                    validator_set: validator_set__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ListenValidatorSetResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for SignMessageRequest {
@@ -3175,293 +3702,6 @@ impl<'de> serde::Deserialize<'de> for SignMessageResponse {
             }
         }
         deserializer.deserialize_struct("api.proto.v1.SignMessageResponse", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SignMessageWaitRequest {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.key_tag != 0 {
-            len += 1;
-        }
-        if !self.message.is_empty() {
-            len += 1;
-        }
-        if self.required_epoch.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("api.proto.v1.SignMessageWaitRequest", len)?;
-        if self.key_tag != 0 {
-            struct_ser.serialize_field("keyTag", &self.key_tag)?;
-        }
-        if !self.message.is_empty() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("message", pbjson::private::base64::encode(&self.message).as_str())?;
-        }
-        if let Some(v) = self.required_epoch.as_ref() {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("requiredEpoch", ToString::to_string(&v).as_str())?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SignMessageWaitRequest {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "key_tag",
-            "keyTag",
-            "message",
-            "required_epoch",
-            "requiredEpoch",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            KeyTag,
-            Message,
-            RequiredEpoch,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "keyTag" | "key_tag" => Ok(GeneratedField::KeyTag),
-                            "message" => Ok(GeneratedField::Message),
-                            "requiredEpoch" | "required_epoch" => Ok(GeneratedField::RequiredEpoch),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SignMessageWaitRequest;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct api.proto.v1.SignMessageWaitRequest")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SignMessageWaitRequest, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut key_tag__ = None;
-                let mut message__ = None;
-                let mut required_epoch__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::KeyTag => {
-                            if key_tag__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("keyTag"));
-                            }
-                            key_tag__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::Message => {
-                            if message__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("message"));
-                            }
-                            message__ = 
-                                Some(map_.next_value::<::pbjson::private::BytesDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::RequiredEpoch => {
-                            if required_epoch__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requiredEpoch"));
-                            }
-                            required_epoch__ = 
-                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
-                            ;
-                        }
-                    }
-                }
-                Ok(SignMessageWaitRequest {
-                    key_tag: key_tag__.unwrap_or_default(),
-                    message: message__.unwrap_or_default(),
-                    required_epoch: required_epoch__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("api.proto.v1.SignMessageWaitRequest", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for SignMessageWaitResponse {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.status != 0 {
-            len += 1;
-        }
-        if !self.request_id.is_empty() {
-            len += 1;
-        }
-        if self.epoch != 0 {
-            len += 1;
-        }
-        if self.aggregation_proof.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("api.proto.v1.SignMessageWaitResponse", len)?;
-        if self.status != 0 {
-            let v = SigningStatus::try_from(self.status)
-                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.status)))?;
-            struct_ser.serialize_field("status", &v)?;
-        }
-        if !self.request_id.is_empty() {
-            struct_ser.serialize_field("requestId", &self.request_id)?;
-        }
-        if self.epoch != 0 {
-            #[allow(clippy::needless_borrow)]
-            #[allow(clippy::needless_borrows_for_generic_args)]
-            struct_ser.serialize_field("epoch", ToString::to_string(&self.epoch).as_str())?;
-        }
-        if let Some(v) = self.aggregation_proof.as_ref() {
-            struct_ser.serialize_field("aggregationProof", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for SignMessageWaitResponse {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "status",
-            "request_id",
-            "requestId",
-            "epoch",
-            "aggregation_proof",
-            "aggregationProof",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Status,
-            RequestId,
-            Epoch,
-            AggregationProof,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "status" => Ok(GeneratedField::Status),
-                            "requestId" | "request_id" => Ok(GeneratedField::RequestId),
-                            "epoch" => Ok(GeneratedField::Epoch),
-                            "aggregationProof" | "aggregation_proof" => Ok(GeneratedField::AggregationProof),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = SignMessageWaitResponse;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct api.proto.v1.SignMessageWaitResponse")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<SignMessageWaitResponse, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut status__ = None;
-                let mut request_id__ = None;
-                let mut epoch__ = None;
-                let mut aggregation_proof__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Status => {
-                            if status__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("status"));
-                            }
-                            status__ = Some(map_.next_value::<SigningStatus>()? as i32);
-                        }
-                        GeneratedField::RequestId => {
-                            if request_id__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("requestId"));
-                            }
-                            request_id__ = Some(map_.next_value()?);
-                        }
-                        GeneratedField::Epoch => {
-                            if epoch__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("epoch"));
-                            }
-                            epoch__ = 
-                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
-                            ;
-                        }
-                        GeneratedField::AggregationProof => {
-                            if aggregation_proof__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("aggregationProof"));
-                            }
-                            aggregation_proof__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(SignMessageWaitResponse {
-                    status: status__.unwrap_or_default(),
-                    request_id: request_id__.unwrap_or_default(),
-                    epoch: epoch__.unwrap_or_default(),
-                    aggregation_proof: aggregation_proof__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("api.proto.v1.SignMessageWaitResponse", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Signature {
@@ -3842,6 +4082,212 @@ impl<'de> serde::Deserialize<'de> for Validator {
             }
         }
         deserializer.deserialize_struct("api.proto.v1.Validator", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ValidatorSet {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.version != 0 {
+            len += 1;
+        }
+        if self.required_key_tag != 0 {
+            len += 1;
+        }
+        if self.epoch != 0 {
+            len += 1;
+        }
+        if self.capture_timestamp.is_some() {
+            len += 1;
+        }
+        if !self.quorum_threshold.is_empty() {
+            len += 1;
+        }
+        if self.status != 0 {
+            len += 1;
+        }
+        if !self.validators.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("api.proto.v1.ValidatorSet", len)?;
+        if self.version != 0 {
+            struct_ser.serialize_field("version", &self.version)?;
+        }
+        if self.required_key_tag != 0 {
+            struct_ser.serialize_field("requiredKeyTag", &self.required_key_tag)?;
+        }
+        if self.epoch != 0 {
+            #[allow(clippy::needless_borrow)]
+            #[allow(clippy::needless_borrows_for_generic_args)]
+            struct_ser.serialize_field("epoch", ToString::to_string(&self.epoch).as_str())?;
+        }
+        if let Some(v) = self.capture_timestamp.as_ref() {
+            struct_ser.serialize_field("captureTimestamp", v)?;
+        }
+        if !self.quorum_threshold.is_empty() {
+            struct_ser.serialize_field("quorumThreshold", &self.quorum_threshold)?;
+        }
+        if self.status != 0 {
+            let v = ValidatorSetStatus::try_from(self.status)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.status)))?;
+            struct_ser.serialize_field("status", &v)?;
+        }
+        if !self.validators.is_empty() {
+            struct_ser.serialize_field("validators", &self.validators)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ValidatorSet {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "version",
+            "required_key_tag",
+            "requiredKeyTag",
+            "epoch",
+            "capture_timestamp",
+            "captureTimestamp",
+            "quorum_threshold",
+            "quorumThreshold",
+            "status",
+            "validators",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Version,
+            RequiredKeyTag,
+            Epoch,
+            CaptureTimestamp,
+            QuorumThreshold,
+            Status,
+            Validators,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "version" => Ok(GeneratedField::Version),
+                            "requiredKeyTag" | "required_key_tag" => Ok(GeneratedField::RequiredKeyTag),
+                            "epoch" => Ok(GeneratedField::Epoch),
+                            "captureTimestamp" | "capture_timestamp" => Ok(GeneratedField::CaptureTimestamp),
+                            "quorumThreshold" | "quorum_threshold" => Ok(GeneratedField::QuorumThreshold),
+                            "status" => Ok(GeneratedField::Status),
+                            "validators" => Ok(GeneratedField::Validators),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ValidatorSet;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct api.proto.v1.ValidatorSet")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ValidatorSet, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut version__ = None;
+                let mut required_key_tag__ = None;
+                let mut epoch__ = None;
+                let mut capture_timestamp__ = None;
+                let mut quorum_threshold__ = None;
+                let mut status__ = None;
+                let mut validators__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Version => {
+                            if version__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("version"));
+                            }
+                            version__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::RequiredKeyTag => {
+                            if required_key_tag__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("requiredKeyTag"));
+                            }
+                            required_key_tag__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::Epoch => {
+                            if epoch__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("epoch"));
+                            }
+                            epoch__ = 
+                                Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
+                            ;
+                        }
+                        GeneratedField::CaptureTimestamp => {
+                            if capture_timestamp__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("captureTimestamp"));
+                            }
+                            capture_timestamp__ = map_.next_value()?;
+                        }
+                        GeneratedField::QuorumThreshold => {
+                            if quorum_threshold__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("quorumThreshold"));
+                            }
+                            quorum_threshold__ = Some(map_.next_value()?);
+                        }
+                        GeneratedField::Status => {
+                            if status__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("status"));
+                            }
+                            status__ = Some(map_.next_value::<ValidatorSetStatus>()? as i32);
+                        }
+                        GeneratedField::Validators => {
+                            if validators__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("validators"));
+                            }
+                            validators__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(ValidatorSet {
+                    version: version__.unwrap_or_default(),
+                    required_key_tag: required_key_tag__.unwrap_or_default(),
+                    epoch: epoch__.unwrap_or_default(),
+                    capture_timestamp: capture_timestamp__,
+                    quorum_threshold: quorum_threshold__.unwrap_or_default(),
+                    status: status__.unwrap_or_default(),
+                    validators: validators__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("api.proto.v1.ValidatorSet", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for ValidatorSetStatus {
