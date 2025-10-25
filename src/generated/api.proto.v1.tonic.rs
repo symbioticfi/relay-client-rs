@@ -141,6 +141,36 @@ pub mod symbiotic_api_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        pub async fn get_aggregation_proofs_by_epoch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAggregationProofsByEpochRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetAggregationProofsByEpochResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetAggregationProofsByEpoch",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetAggregationProofsByEpoch",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn get_current_epoch(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCurrentEpochRequest>,
@@ -195,6 +225,36 @@ pub mod symbiotic_api_service_client {
             req.extensions_mut()
                 .insert(
                     GrpcMethod::new("api.proto.v1.SymbioticAPIService", "GetSignatures"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_signatures_by_epoch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSignaturesByEpochRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetSignaturesByEpochResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetSignaturesByEpoch",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetSignaturesByEpoch",
+                    ),
                 );
             self.inner.unary(req, path, codec).await
         }
@@ -314,6 +374,66 @@ pub mod symbiotic_api_service_client {
                     GrpcMethod::new(
                         "api.proto.v1.SymbioticAPIService",
                         "GetValidatorByAddress",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_validator_by_key(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetValidatorByKeyRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetValidatorByKeyResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetValidatorByKey",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetValidatorByKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_local_validator(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetLocalValidatorRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetLocalValidatorResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetLocalValidator",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetLocalValidator",
                     ),
                 );
             self.inner.unary(req, path, codec).await
