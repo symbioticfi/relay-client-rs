@@ -3,13 +3,3 @@ modules:
   - path: .
 deps:
   - buf.build/googleapis/googleapis
-lint:
-  use:
-    - STANDARD
-  ignore:
-    - scripts
-    - src
-    - target
-breaking:
-  use:
-    - FILE
