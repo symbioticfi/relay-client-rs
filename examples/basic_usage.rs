@@ -11,15 +11,18 @@
 //! 8. Get signatures by epoch
 //! 9. Get validator by key
 //! 10. Get local validator information
-//! 11. Stream signatures in real-time
-//! 12. Stream aggregation proofs in real-time
-//! 13. Stream validator set changes in real-time
+//! 11. Get signature request IDs by epoch
+//! 12. Get signature requests by epoch
+//! 13. Stream signatures in real-time
+//! 14. Stream aggregation proofs in real-time
+//! 15. Stream validator set changes in real-time
 
 use std::env;
 use symbiotic_relay_client::generated::api::proto::v1::{
     GetAggregationProofRequest, GetAggregationProofsByEpochRequest, GetCurrentEpochRequest,
     GetLastAllCommittedRequest, GetLocalValidatorRequest, GetSignaturesRequest,
-    GetSignaturesByEpochRequest, GetValidatorByKeyRequest, GetValidatorSetRequest,
+    GetSignaturesByEpochRequest, GetSignatureRequestIdsByEpochRequest,
+    GetSignatureRequestsByEpochRequest, GetValidatorByKeyRequest, GetValidatorSetRequest,
     ListenProofsRequest, ListenSignaturesRequest, ListenValidatorSetRequest, SignMessageRequest,
     symbiotic_api_service_client::SymbioticApiServiceClient,
 };
@@ -149,6 +152,36 @@ impl RelayClient {
     > {
         let request = tonic::Request::new(GetSignaturesByEpochRequest { epoch });
         self.client.get_signatures_by_epoch(request).await
+    }
+
+    /// Get all signature request IDs by epoch.
+    pub async fn get_signature_request_ids_by_epoch(
+        &mut self,
+        epoch: u64,
+    ) -> Result<
+        tonic::Response<
+            symbiotic_relay_client::generated::api::proto::v1::GetSignatureRequestIdsByEpochResponse,
+        >,
+        tonic::Status,
+    > {
+        let request = tonic::Request::new(GetSignatureRequestIdsByEpochRequest { epoch });
+        self.client
+            .get_signature_request_i_ds_by_epoch(request)
+            .await
+    }
+
+    /// Get all signature requests by epoch.
+    pub async fn get_signature_requests_by_epoch(
+        &mut self,
+        epoch: u64,
+    ) -> Result<
+        tonic::Response<
+            symbiotic_relay_client::generated::api::proto::v1::GetSignatureRequestsByEpochResponse,
+        >,
+        tonic::Status,
+    > {
+        let request = tonic::Request::new(GetSignatureRequestsByEpochRequest { epoch });
+        self.client.get_signature_requests_by_epoch(request).await
     }
 
     /// Get validator by key.
@@ -302,6 +335,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(proof_response) => {
             let proof_data = proof_response.into_inner();
             if let Some(proof) = proof_data.aggregation_proof {
+                println!("Request ID: {}", proof.request_id);
                 println!("Proof length: {} bytes", proof.proof.len());
                 println!("Message hash length: {} bytes", proof.message_hash.len());
             }
@@ -320,6 +354,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             for (index, signature) in signatures_data.signatures.iter().enumerate() {
                 println!("Signature {}:", index + 1);
+                println!("  - Request ID: {}", signature.request_id);
                 println!("  - Signature length: {} bytes", signature.signature.len());
                 println!(
                     "  - Public key length: {} bytes",
@@ -349,6 +384,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             );
             for (index, proof) in proofs_data.aggregation_proofs.iter().take(3).enumerate() {
                 println!("Proof {}:", index + 1);
+                println!("  - Request ID: {}", proof.request_id);
                 println!("  - Proof length: {} bytes", proof.proof.len());
                 println!("  - Message hash length: {} bytes", proof.message_hash.len());
             }
@@ -415,7 +451,52 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // Example 11: Listen to signatures stream
+    // Example 11: Get signature request IDs by epoch
+    println!("\n=== Getting Signature Request IDs by Epoch ===");
+    match client
+        .get_signature_request_ids_by_epoch(current_epoch)
+        .await
+    {
+        Ok(ids_response) => {
+            let ids_data = ids_response.into_inner();
+            println!(
+                "Number of signature request IDs for epoch {}: {}",
+                current_epoch,
+                ids_data.request_ids.len()
+            );
+            for (index, request_id) in ids_data.request_ids.iter().take(5).enumerate() {
+                println!("  {}: {}", index + 1, request_id);
+            }
+        }
+        Err(e) => {
+            println!("Could not get signature request IDs: {}", e.message());
+        }
+    }
+
+    // Example 12: Get signature requests by epoch
+    println!("\n=== Getting Signature Requests by Epoch ===");
+    match client.get_signature_requests_by_epoch(current_epoch).await {
+        Ok(requests_response) => {
+            let requests_data = requests_response.into_inner();
+            println!(
+                "Number of signature requests for epoch {}: {}",
+                current_epoch,
+                requests_data.signature_requests.len()
+            );
+            for (index, request) in requests_data.signature_requests.iter().take(3).enumerate() {
+                println!("Signature Request {}:", index + 1);
+                println!("  - Request ID: {}", request.request_id);
+                println!("  - Key tag: {}", request.key_tag);
+                println!("  - Message length: {} bytes", request.message.len());
+                println!("  - Required epoch: {}", request.required_epoch);
+            }
+        }
+        Err(e) => {
+            println!("Could not get signature requests: {}", e.message());
+        }
+    }
+
+    // Example 13: Listen to signatures stream
     println!("\n=== Listening to Signatures Stream ===");
     println!("Starting signature stream (will show first 3 signatures)...");
     match client.listen_signatures(Some(current_epoch)).await {
@@ -428,6 +509,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!("  - Request ID: {}", sig_data.request_id);
                         println!("  - Epoch: {}", sig_data.epoch);
                         if let Some(signature) = sig_data.signature {
+                            println!("  - Signature request ID: {}", signature.request_id);
                             println!("  - Signature length: {} bytes", signature.signature.len());
                         }
                         count += 1;
@@ -447,7 +529,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // Example 12: Listen to proofs stream
+    // Example 14: Listen to proofs stream
     println!("\n=== Listening to Proofs Stream ===");
     println!("Starting proofs stream (will show first 3 proofs)...");
     match client.listen_proofs(Some(current_epoch)).await {
@@ -460,6 +542,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         println!("  - Request ID: {}", proof_data.request_id);
                         println!("  - Epoch: {}", proof_data.epoch);
                         if let Some(proof) = proof_data.aggregation_proof {
+                            println!("  - Proof request ID: {}", proof.request_id);
                             println!("  - Proof length: {} bytes", proof.proof.len());
                         }
                         count += 1;
@@ -479,7 +562,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // Example 13: Listen to validator set changes stream
+    // Example 15: Listen to validator set changes stream
     println!("\n=== Listening to Validator Set Changes Stream ===");
     println!("Starting validator set stream (will show first 2 updates)...");
     match client.listen_validator_set(Some(current_epoch)).await {

@@ -258,6 +258,66 @@ pub mod symbiotic_api_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        pub async fn get_signature_request_i_ds_by_epoch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSignatureRequestIDsByEpochRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetSignatureRequestIDsByEpochResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetSignatureRequestIDsByEpoch",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetSignatureRequestIDsByEpoch",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        pub async fn get_signature_requests_by_epoch(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSignatureRequestsByEpochRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetSignatureRequestsByEpochResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetSignatureRequestsByEpoch",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetSignatureRequestsByEpoch",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn get_signature_request(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSignatureRequestRequest>,
