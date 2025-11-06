@@ -21,7 +21,7 @@ use std::env;
 use symbiotic_relay_client::generated::api::proto::v1::{
     GetAggregationProofRequest, GetAggregationProofsByEpochRequest, GetCurrentEpochRequest,
     GetLastAllCommittedRequest, GetLocalValidatorRequest, GetSignaturesRequest,
-    GetSignaturesByEpochRequest, GetSignatureRequestIdsByEpochRequest,
+    GetSignaturesByEpochRequest, GetSignatureRequestIDsByEpochRequest,
     GetSignatureRequestsByEpochRequest, GetValidatorByKeyRequest, GetValidatorSetRequest,
     ListenProofsRequest, ListenSignaturesRequest, ListenValidatorSetRequest, SignMessageRequest,
     symbiotic_api_service_client::SymbioticApiServiceClient,
@@ -160,11 +160,11 @@ impl RelayClient {
         epoch: u64,
     ) -> Result<
         tonic::Response<
-            symbiotic_relay_client::generated::api::proto::v1::GetSignatureRequestIdsByEpochResponse,
+            symbiotic_relay_client::generated::api::proto::v1::GetSignatureRequestIDsByEpochResponse,
         >,
         tonic::Status,
     > {
-        let request = tonic::Request::new(GetSignatureRequestIdsByEpochRequest { epoch });
+        let request = tonic::Request::new(GetSignatureRequestIDsByEpochRequest { epoch });
         self.client
             .get_signature_request_i_ds_by_epoch(request)
             .await
