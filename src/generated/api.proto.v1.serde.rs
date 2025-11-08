@@ -1280,9 +1280,15 @@ impl serde::Serialize for GetLastAllCommittedResponse {
         if !self.epoch_infos.is_empty() {
             len += 1;
         }
+        if self.suggested_epoch_info.is_some() {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetLastAllCommittedResponse", len)?;
         if !self.epoch_infos.is_empty() {
             struct_ser.serialize_field("epochInfos", &self.epoch_infos)?;
+        }
+        if let Some(v) = self.suggested_epoch_info.as_ref() {
+            struct_ser.serialize_field("suggestedEpochInfo", v)?;
         }
         struct_ser.end()
     }
@@ -1296,11 +1302,14 @@ impl<'de> serde::Deserialize<'de> for GetLastAllCommittedResponse {
         const FIELDS: &[&str] = &[
             "epoch_infos",
             "epochInfos",
+            "suggested_epoch_info",
+            "suggestedEpochInfo",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             EpochInfos,
+            SuggestedEpochInfo,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1323,6 +1332,7 @@ impl<'de> serde::Deserialize<'de> for GetLastAllCommittedResponse {
                     {
                         match value {
                             "epochInfos" | "epoch_infos" => Ok(GeneratedField::EpochInfos),
+                            "suggestedEpochInfo" | "suggested_epoch_info" => Ok(GeneratedField::SuggestedEpochInfo),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1343,6 +1353,7 @@ impl<'de> serde::Deserialize<'de> for GetLastAllCommittedResponse {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut epoch_infos__ = None;
+                let mut suggested_epoch_info__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::EpochInfos => {
@@ -1354,10 +1365,17 @@ impl<'de> serde::Deserialize<'de> for GetLastAllCommittedResponse {
                                     .into_iter().map(|(k,v)| (k.0, v)).collect()
                             );
                         }
+                        GeneratedField::SuggestedEpochInfo => {
+                            if suggested_epoch_info__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("suggestedEpochInfo"));
+                            }
+                            suggested_epoch_info__ = map_.next_value()?;
+                        }
                     }
                 }
                 Ok(GetLastAllCommittedResponse {
                     epoch_infos: epoch_infos__.unwrap_or_default(),
+                    suggested_epoch_info: suggested_epoch_info__,
                 })
             }
         }
