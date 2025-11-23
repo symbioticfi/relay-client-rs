@@ -2,6 +2,8 @@
 
 Rust gRPC client for the Symbiotic Relay. Code is generated with buf using prost + tonic. Generated modules live under `crate::generated`.
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/symbioticfi/relay-client-rs)
+
 # Installation
 
 Add this to your `Cargo.toml`:
