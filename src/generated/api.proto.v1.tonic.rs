@@ -618,6 +618,36 @@ pub mod symbiotic_api_service_client {
                 );
             self.inner.unary(req, path, codec).await
         }
+        pub async fn get_custom_schedule_node_status(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetCustomScheduleNodeStatusRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::GetCustomScheduleNodeStatusResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/api.proto.v1.SymbioticAPIService/GetCustomScheduleNodeStatus",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "api.proto.v1.SymbioticAPIService",
+                        "GetCustomScheduleNodeStatus",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
         pub async fn listen_signatures(
             &mut self,
             request: impl tonic::IntoRequest<super::ListenSignaturesRequest>,
