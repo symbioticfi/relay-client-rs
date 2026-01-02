@@ -1387,21 +1387,21 @@ impl serde::Serialize for GetCustomScheduleNodeStatusResponse {
         if self.is_active {
             len += 1;
         }
-        if self.slot_start_time.is_some() {
+        if self.current_slot_start_time.is_some() {
             len += 1;
         }
-        if self.slot_end_time.is_some() {
+        if self.current_slot_end_time.is_some() {
             len += 1;
         }
         let mut struct_ser = serializer.serialize_struct("api.proto.v1.GetCustomScheduleNodeStatusResponse", len)?;
         if self.is_active {
             struct_ser.serialize_field("isActive", &self.is_active)?;
         }
-        if let Some(v) = self.slot_start_time.as_ref() {
-            struct_ser.serialize_field("slotStartTime", v)?;
+        if let Some(v) = self.current_slot_start_time.as_ref() {
+            struct_ser.serialize_field("currentSlotStartTime", v)?;
         }
-        if let Some(v) = self.slot_end_time.as_ref() {
-            struct_ser.serialize_field("slotEndTime", v)?;
+        if let Some(v) = self.current_slot_end_time.as_ref() {
+            struct_ser.serialize_field("currentSlotEndTime", v)?;
         }
         struct_ser.end()
     }
@@ -1415,17 +1415,17 @@ impl<'de> serde::Deserialize<'de> for GetCustomScheduleNodeStatusResponse {
         const FIELDS: &[&str] = &[
             "is_active",
             "isActive",
-            "slot_start_time",
-            "slotStartTime",
-            "slot_end_time",
-            "slotEndTime",
+            "current_slot_start_time",
+            "currentSlotStartTime",
+            "current_slot_end_time",
+            "currentSlotEndTime",
         ];
 
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             IsActive,
-            SlotStartTime,
-            SlotEndTime,
+            CurrentSlotStartTime,
+            CurrentSlotEndTime,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1448,8 +1448,8 @@ impl<'de> serde::Deserialize<'de> for GetCustomScheduleNodeStatusResponse {
                     {
                         match value {
                             "isActive" | "is_active" => Ok(GeneratedField::IsActive),
-                            "slotStartTime" | "slot_start_time" => Ok(GeneratedField::SlotStartTime),
-                            "slotEndTime" | "slot_end_time" => Ok(GeneratedField::SlotEndTime),
+                            "currentSlotStartTime" | "current_slot_start_time" => Ok(GeneratedField::CurrentSlotStartTime),
+                            "currentSlotEndTime" | "current_slot_end_time" => Ok(GeneratedField::CurrentSlotEndTime),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1470,8 +1470,8 @@ impl<'de> serde::Deserialize<'de> for GetCustomScheduleNodeStatusResponse {
                     V: serde::de::MapAccess<'de>,
             {
                 let mut is_active__ = None;
-                let mut slot_start_time__ = None;
-                let mut slot_end_time__ = None;
+                let mut current_slot_start_time__ = None;
+                let mut current_slot_end_time__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::IsActive => {
@@ -1480,24 +1480,24 @@ impl<'de> serde::Deserialize<'de> for GetCustomScheduleNodeStatusResponse {
                             }
                             is_active__ = Some(map_.next_value()?);
                         }
-                        GeneratedField::SlotStartTime => {
-                            if slot_start_time__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("slotStartTime"));
+                        GeneratedField::CurrentSlotStartTime => {
+                            if current_slot_start_time__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("currentSlotStartTime"));
                             }
-                            slot_start_time__ = map_.next_value()?;
+                            current_slot_start_time__ = map_.next_value()?;
                         }
-                        GeneratedField::SlotEndTime => {
-                            if slot_end_time__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("slotEndTime"));
+                        GeneratedField::CurrentSlotEndTime => {
+                            if current_slot_end_time__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("currentSlotEndTime"));
                             }
-                            slot_end_time__ = map_.next_value()?;
+                            current_slot_end_time__ = map_.next_value()?;
                         }
                     }
                 }
                 Ok(GetCustomScheduleNodeStatusResponse {
                     is_active: is_active__.unwrap_or_default(),
-                    slot_start_time: slot_start_time__,
-                    slot_end_time: slot_end_time__,
+                    current_slot_start_time: current_slot_start_time__,
+                    current_slot_end_time: current_slot_end_time__,
                 })
             }
         }
